@@ -1,4 +1,29 @@
 -- Exercício
+-- 1.5.1 Responde (devolve boolean) se é verdade que todos os estudantes de renda acima de
+-- 410 são aprovados (grade > 0).
+
+DO $$
+DECLARE
+    resultado BOOLEAN;
+BEGIN
+    resultado := todos_acima_410();
+    RAISE NOTICE 'Todos os estudantes de renda acima de 410 são aprovados? %', resultado;
+END;
+$$
+
+
+CREATE OR REPLACE FUNCTION todos_acima_410()
+RETURNS BOOLEAN LANGUAGE plpgsql
+AS $$
+DECLARE
+    renda_acima_410 BOOLEAN;
+BEGIN
+    SELECT EXISTS (SELECT 1 FROM tb_performance WHERE salary > 410 AND grade <= 0) INTO renda_acima_410;
+    RETURN NOT renda_acima_410;
+END;
+$$;
+
+
 --  1.4.3 Recebe um sexo como parâmetro em modo IN e utiliza oito parâmetros em modo OUT
 -- para dizer qual o percentual de cada nota (variável grade) obtida por estudantes daquele
 -- sexo.
