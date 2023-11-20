@@ -1,4 +1,55 @@
 -- Exercício
+--  1.4.3 Recebe um sexo como parâmetro em modo IN e utiliza oito parâmetros em modo OUT
+-- para dizer qual o percentual de cada nota (variável grade) obtida por estudantes daquele
+-- sexo.
+DO $$
+DECLARE
+    v_percentual_nota_1 FLOAT;
+    v_percentual_nota_2 FLOAT;
+    v_percentual_nota_3 FLOAT;
+    v_percentual_nota_4 FLOAT;
+    v_percentual_nota_5 FLOAT;
+    v_percentual_nota_6 FLOAT;
+    v_percentual_nota_7 FLOAT;
+    v_percentual_nota_8 FLOAT;
+BEGIN
+    CALL sp_percentual_nota(1, v_percentual_nota_1, v_percentual_nota_2, v_percentual_nota_3, v_percentual_nota_4, v_percentual_nota_5, v_percentual_nota_6, v_percentual_nota_7, v_percentual_nota_8);
+    RAISE NOTICE 'Percentual da nota 1: %', v_percentual_nota_1;
+    RAISE NOTICE 'Percentual da nota 2: %', v_percentual_nota_2;
+	RAISE NOTICE 'Percentual da nota 3: %', v_percentual_nota_3;
+	RAISE NOTICE 'Percentual da nota 4: %', v_percentual_nota_4;
+	RAISE NOTICE 'Percentual da nota 5: %', v_percentual_nota_5;
+	RAISE NOTICE 'Percentual da nota 6: %', v_percentual_nota_6;
+	RAISE NOTICE 'Percentual da nota 7: %', v_percentual_nota_7;
+	RAISE NOTICE 'Percentual da nota 8: %', v_percentual_nota_8;
+END;
+$$;
+
+DROP PROCEDURE IF EXISTS sp_percentual_nota;
+CREATE OR REPLACE PROCEDURE sp_percentual_nota(
+	IN sexo_param INT,
+	OUT percentual_nota_1 FLOAT,
+    OUT percentual_nota_2 FLOAT,
+    OUT percentual_nota_3 FLOAT,
+    OUT percentual_nota_4 FLOAT,
+    OUT percentual_nota_5 FLOAT,
+    OUT percentual_nota_6 FLOAT,
+    OUT percentual_nota_7 FLOAT,
+    OUT percentual_nota_8 FLOAT
+) LANGUAGE plpgsql 
+AS $$
+BEGIN
+    -- Calcular o percentual de cada nota para o sexo especificado
+    SELECT COUNT(*) * 100.0 /(SELECT COUNT(*) FROM tb_performance) INTO percentual_nota_1 FROM tb_performance WHERE gender = sexo_param AND grade = 1;
+    SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM tb_performance) INTO percentual_nota_2 FROM tb_performance WHERE gender = sexo_param AND grade = 2;
+    SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM tb_performance) INTO percentual_nota_3 FROM tb_performance WHERE gender = sexo_param AND grade = 3;
+    SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM tb_performance) INTO percentual_nota_4 FROM tb_performance WHERE gender = sexo_param AND grade = 4;
+    SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM tb_performance) INTO percentual_nota_5 FROM tb_performance WHERE gender = sexo_param AND grade = 5;
+    SELECT COUNT(*) * 100.0 /(SELECT COUNT(*) FROM tb_performance) INTO percentual_nota_6 FROM tb_performance WHERE gender = sexo_param AND grade = 6;
+    SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM tb_performance)INTO percentual_nota_7 FROM tb_performance WHERE gender = sexo_param AND grade = 7;
+    SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM tb_performance) INTO percentual_nota_8 FROM tb_performance WHERE gender = sexo_param AND grade = 8;
+END;
+$$
 
 -- 1.4.2 Exibe o percentual de estudantes de cada sexo.
 
