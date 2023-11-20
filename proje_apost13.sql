@@ -1,4 +1,62 @@
 -- Exercício
+-- 1.5.3 Devolve o percentual de alunos que se preparam pelo menos um pouco para os
+-- “midterm exams” e que são aprovados (grade > 0).
+
+DO $$
+DECLARE
+    resultado NUMERIC(10,2);
+BEGIN
+    resultado := percent_aprov_com_prep_exam();
+    RAISE NOTICE 'Percentual de alunos que se preparam para "midterm exams" e são aprovados: %', resultado;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION percent_aprov_com_prep_exam()
+RETURNS FLOAT LANGUAGE plpgsql
+AS $$
+DECLARE
+    total_estudantes INT;
+    aprovados_com_prep_exam INT;
+BEGIN
+    -- Alunos que se preparam para o exame
+    SELECT COUNT(*) INTO total_estudantes FROM tb_performance WHERE PREP_EXAM > 0;
+    -- Alunos aprovados no exames 
+    SELECT COUNT(*) INTO aprovados_com_prep_exam FROM tb_performance WHERE PREP_EXAM > 0 AND GRADE > 0;
+    -- Alunos aprovados com preparação
+    RETURN aprovados_com_prep_exam * 100.0 / total_estudantes;
+END;
+$$;
+
+
+-- 1.5.2 Responde (devolve boolean) se é verdade que, entre os estudantes que fazem
+-- anotações pelo menos algumas vezes durante as aulas, pelo menos 70% são aprovados
+-- (grade > 0).
+DO $$
+DECLARE
+    resultado BOOLEAN;
+BEGIN
+    resultado := percent_aprovados_com_anotacoes();
+    RAISE NOTICE 'Pelo menos 70%% dos estudantes com anotações são aprovados? %', resultado;
+END;
+$$
+
+CREATE OR REPLACE FUNCTION percent_aprovados_com_anotacoes()
+RETURNS BOOLEAN LANGUAGE plpgsql
+AS $$
+DECLARE
+    total_estudantes INT;
+    aprovados_com_anotacoes INT;
+BEGIN
+    -- O total de alunos que fazem anotações
+    SELECT COUNT(*) INTO total_estudantes FROM tb_performance WHERE NOTES > 0;
+    -- O total de alunos aprovados com anotações
+    SELECT COUNT(*) INTO aprovados_com_anotacoes FROM tb_performance WHERE NOTES > 0 AND GRADE > 0;
+    -- 70% aprovados
+    RETURN aprovados_com_anotacoes * 100.0 / total_estudantes >= 70;
+END;
+$$
+
+
 -- 1.5.1 Responde (devolve boolean) se é verdade que todos os estudantes de renda acima de
 -- 410 são aprovados (grade > 0).
 
