@@ -1,0 +1,11 @@
+SELECT * FROM tb_performance;
+
+CREATE TABLE tb_performance(
+	cod_per SERIAL PRIMARY KEY,
+	AGE INT,
+	GENDER INT,
+	SALARY INT,
+	PREP_EXAM INT,
+	NOTES INT,
+	GRADE INT
+);
